@@ -7,7 +7,7 @@
 \tjjm_for_3\
 ├── reference                                                     # 参考资料目录
 ├── README.md                                                     # 项目说明文档
-├── demo.md
+├── demo.md                                                       # 6阶段参赛流程指南（参考版）
 └──data_analysis                                                  # 数据分析目录,包含数据采集、清洗、处理、分析等文件
 
 
