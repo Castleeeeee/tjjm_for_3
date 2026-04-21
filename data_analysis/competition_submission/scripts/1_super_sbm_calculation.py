@@ -52,17 +52,14 @@ def calculate_super_sbm(df, input_cols, output_good_cols, output_bad_cols):
             pulp.lpSum([s_plus_b[l] / Yb[l, i] for l in range(q2)])
         ) == 1
         
-        # --- 约束条件 2: 投入约束 (sum(lambda_j * x_jk) - s_minus <= t * x_ik) ---
         for k in range(m):
-            prob += pulp.lpSum([lambdas[j] * X[k, j] for j in range(n) if j != i]) <= t * X[k, i] - s_minus[k]
+            prob += pulp.lpSum([lambdas[j] * X[k, j] for j in range(n) if j != i]) + s_minus[k] == t * X[k, i]
             
-        # --- 约束条件 3: 期望产出约束 (sum(lambda_j * y_jk^g) + s_plus_g >= t * y_ik^g) ---
         for r in range(q1):
-            prob += pulp.lpSum([lambdas[j] * Yg[r, j] for j in range(n) if j != i]) >= t * Yg[r, i] + s_plus_g[r]
+            prob += pulp.lpSum([lambdas[j] * Yg[r, j] for j in range(n) if j != i]) - s_plus_g[r] == t * Yg[r, i]
             
-        # --- 约束条件 4: 非期望产出约束 (sum(lambda_j * y_jk^b) - s_plus_b <= t * y_ik^b) ---
         for l in range(q2):
-            prob += pulp.lpSum([lambdas[j] * Yb[l, j] for j in range(n) if j != i]) <= t * Yb[l, i] - s_plus_b[l]
+            prob += pulp.lpSum([lambdas[j] * Yb[l, j] for j in range(n) if j != i]) + s_plus_b[l] == t * Yb[l, i]
 
         prob.solve(pulp.PULP_CBC_CMD(msg=0))
         
